@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇妙的重叠与文氏图 — 少儿奥数趣味互动课堂</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部导航 -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="emoji">🎨</span>
+                <div class="logo-text">
+                    <h1>奇妙的重叠与文氏图</h1>
+                    <p>少儿奥数趣味互动课堂 • Overlap & Venn Diagrams</p>
+                </div>
+            </div>
+            <div class="sound-control">
+                <button id="soundToggleBtn" class="glass-btn" title="开关音效">
+                    <span class="icon">🔊</span> <span class="label">音效: 开</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 关卡进度条 -->
+        <nav class="level-nav">
+            <div class="level-indicator active" data-level="1">
+                <div class="dot">1</div>
+                <span>线段重叠</span>
+            </div>
+            <div class="level-indicator" data-level="2">
+                <div class="dot">2</div>
+                <span>双圈魔法</span>
+            </div>
+            <div class="level-indicator" data-level="3">
+                <div class="dot">3</div>
+                <span>蘑菇种植园</span>
+            </div>
+            <div class="level-indicator" data-level="4">
+                <div class="dot">4</div>
+                <span>深夜霓虹灯</span>
+            </div>
+            <div class="level-indicator" data-level="5">
+                <div class="dot">5</div>
+                <span>终极挑战</span>
+            </div>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            
+            <!-- LEVEL 1: 线段重叠的秘密 -->
+            <section id="level-1" class="level-panel active">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>📐 木板与铁丝重叠模拟器</h3>
+                            <p>拖动滑块，看看连接在一起的木板是如何变化的！</p>
+                        </div>
+                        <div class="interactive-stage">
+                            <!-- 木板动画画布 -->
+                            <div class="wooden-board-simulator">
+                                <div class="board-container" id="boardContainer">
+                                    <!-- JS 动态渲染木板 -->
+                                </div>
+                                <div class="ruler-x" id="rulerX">
+                                    <!-- 刻度尺 -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 控制面板 -->
+                        <div class="control-box">
+                            <div class="control-group">
+                                <label for="boardCountRange">木板数量 (块): <span id="boardCountVal" class="badge">4</span></label>
+                                <input type="range" id="boardCountRange" min="2" max="6" value="4" step="1">
+                            </div>
+                            <div class="control-group">
+                                <label for="boardLengthRange">单块木板长度 (厘米): <span id="boardLengthVal" class="badge">80</span></label>
+                                <input type="range" id="boardLengthRange" min="30" max="120" value="80" step="5">
+                            </div>
+                            <div class="control-group">
+                                <label for="overlapRange">重叠部分长度 (厘米): <span id="overlapVal" class="badge">10</span></label>
+                                <input type="range" id="overlapRange" min="0" max="30" value="10" step="1">
+                            </div>
+                        </div>
+                        <!-- 动态算式 -->
+                        <div class="formula-box">
+                            <div class="formula-title">💡 算式推导秘籍：</div>
+                            <div class="formula-text">
+                                <span class="calc-part">总长度</span> = 
+                                <span class="calc-part" id="f-count">4</span> × <span class="calc-part" id="f-length">80</span> 厘米 - 
+                                <span class="calc-part" id="f-overlap-count">3</span> × <span class="calc-part" id="f-overlap">10</span> 厘米 = 
+                                <span class="calc-part result" id="f-result">290</span> 厘米
+                            </div>
+                            <div class="formula-explain">
+                                <b>为什么呢？</b> 钉在一起时，有 <span id="f-overlap-count-text">3</span> 处重叠。每一处重叠都会让总长度减少 1 份重叠的长度哦！
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 闯关小挑战</h3>
+                            <p>完成以下题目，即可解锁下一关卡！</p>
+                        </div>
+                        
+                        <!-- 题目 1 -->
+                        <div class="quiz-card" id="q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>将四块长度均为80厘米的木板钉成一块长木板，中间钉在一起重叠的部分都是10厘米，钉成的这块长木板的长度是多少厘米？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="q1-input" placeholder="输入数字">
+                                <span>厘米</span>
+                                <button onclick="checkQuestion('q1', 290)" class="check-btn">检查答案</button>
+                                <button onclick="skipQuestion('q1', 290)" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="q1-feedback"></div>
+                        </div>
+
+                        <!-- 题目 2 -->
+                        <div class="quiz-card locked" id="q2-card">
+                            <div class="quiz-question">
+                                <span class="q-num">2</span>
+                                <p>把四根一样长的铁丝，每根长40厘米，绑成一根长130厘米的长铁丝，每两根铁丝中间的重叠部分一样长，那么每两根铁丝中间的重叠部分是多少厘米？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="q2-input" placeholder="输入数字" disabled>
+                                <span>厘米</span>
+                                <button onclick="checkQuestion('q2', 10)" class="check-btn" disabled>检查答案</button>
+                                <button onclick="skipQuestion('q2', 10)" class="skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="q2-feedback"></div>
+                        </div>
+
+                        <!-- 题目 3 -->
+                        <div class="quiz-card locked" id="q3-card">
+                            <div class="quiz-question">
+                                <span class="q-num">3</span>
+                                <p>把两块一样长的木板钉在一起，钉成一块长35厘米的木板。中间重合部分长11厘米，这两块木板各长多少厘米？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="q3-input" placeholder="输入数字" disabled>
+                                <span>厘米</span>
+                                <button onclick="checkQuestion('q3', 23)" class="check-btn" disabled>检查答案</button>
+                                <button onclick="skipQuestion('q3', 23)" class="skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="q3-feedback"></div>
+                            <!-- 题目3 专用的交互解密按钮 -->
+                            <div class="hint-action" style="display:none;" id="q3-hint-action">
+                                <button onclick="toggleQ3Demo()" class="hint-btn">💡 点击查看动画解密</button>
+                                <div class="q3-demo-box" id="q3DemoBox" style="display:none;">
+                                    <div class="q3-wood-row">
+                                        <div class="q3-board" style="width: 115px;">木板 A (23)</div>
+                                        <div class="q3-board" style="width: 115px; margin-left: -55px;">木板 B (23)</div>
+                                    </div>
+                                    <div class="q3-arrow-row">
+                                        <span>←--------- 钉成总长 35 厘米 ---------→</span>
+                                    </div>
+                                    <p class="explain-text">如果我们将重合部分（11厘米）再多加一份，正好可以拼成两块完整的木板！</p>
+                                    <p class="formula-text">两块木板的总长度 = 35 + 11 = 46 厘米<br>单块木板的长度 = 46 ÷ 2 = 23 厘米</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 2: 初识文氏图 - 两个圈圈的魔法 -->
+            <section id="level-2" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🔮 文氏图魔法圈圈模拟器</h3>
+                            <p>鼠标悬停在不同区域，看看它们代表哪些同学！</p>
+                        </div>
+                        <div class="interactive-stage venn-stage">
+                            <!-- SVG 文氏图 -->
+                            <div class="venn-wrapper">
+                                <svg viewBox="0 0 500 350" width="100%" height="100%" id="vennSvg">
+                                    <defs>
+                                        <!-- 阴影滤镜 -->
+                                        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                                            <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.15" />
+                                        </filter>
+                                    </defs>
+                                    <!-- 外部矩形（全班） -->
+                                    <rect x="10" y="10" width="480" height="330" rx="15" fill="#f8fafc" stroke="#e2e8f0" stroke-width="3" id="vennOuterRect" />
+                                    <text x="30" y="40" fill="#64748b" font-weight="bold" font-size="14">全班同学 (总人数)</text>
+                                    
+                                    <!-- 圈 A -->
+                                    <circle cx="190" cy="180" r="100" fill="url(#gradA)" stroke="#3b82f6" stroke-width="4" opacity="0.75" class="venn-circle" id="circleA" />
+                                    <!-- 圈 B -->
+                                    <circle cx="310" cy="180" r="100" fill="url(#gradB)" stroke="#ec4899" stroke-width="4" opacity="0.75" class="venn-circle" id="circleB" />
+                                    
+                                    <!-- 交集高亮圈（动态追加或CSS覆盖） -->
+                                    <path d="M 250,91.65 A 100,100 0 0,1 250,268.35 A 100,100 0 0,1 250,91.65" fill="#a855f7" opacity="0" class="venn-intersection" id="intersectionPath" />
+
+                                    <!-- 渐变色定义 -->
+                                    <defs>
+                                        <linearGradient id="gradA" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#93c5fd" />
+                                            <stop offset="100%" stop-color="#3b82f6" />
+                                        </linearGradient>
+                                        <linearGradient id="gradB" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#fbcfe8" />
+                                            <stop offset="100%" stop-color="#ec4899" />
+                                        </linearGradient>
+                                    </defs>
+
+                                    <!-- 文字标签 -->
+                                    <!-- 圈 A 独有 -->
+                                    <text x="130" y="185" text-anchor="middle" font-size="18" font-weight="900" fill="#1e3a8a" id="labelOnlyA">10</text>
+                                    <text x="130" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a" id="titleOnlyA">只参加A</text>
+                                    
+                                    <!-- 圈 B 独有 -->
+                                    <text x="370" y="185" text-anchor="middle" font-size="18" font-weight="900" fill="#9d174d" id="labelOnlyB">18</text>
+                                    <text x="370" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#9d174d" id="titleOnlyB">只参加B</text>
+                                    
+                                    <!-- 重叠部分 -->
+                                    <text x="250" y="185" text-anchor="middle" font-size="18" font-weight="900" fill="#4c1d95" id="labelBoth">5</text>
+                                    <text x="250" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#4c1d95" id="titleBoth">都参加</text>
+                                    
+                                    <!-- 外部（均未参加） -->
+                                    <text x="440" y="310" text-anchor="middle" font-size="18" font-weight="900" fill="#475569" id="labelNeither">0</text>
+                                    <text x="440" y="330" text-anchor="middle" font-size="12" font-weight="bold" fill="#475569" id="titleNeither">都不参加</text>
+                                </svg>
+                                
+                                <!-- 漂浮小人动画容器 -->
+                                <div class="floating-items-container" id="floatingContainer">
+                                    <!-- Emojis/Icons 飞入动画 -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 动态显示区域详情 -->
+                        <div class="hover-info-box" id="hoverInfoBox">
+                            💡 移动鼠标到圆圈上，查看各区域的意义！
+                        </div>
+
+                        <!-- 互动计算器 -->
+                        <div class="venn-calculator">
+                            <div class="calc-grid">
+                                <div>A (美术班): <input type="number" id="calc-a" value="15" class="small-input"> 人</div>
+                                <div>B (舞蹈班): <input type="number" id="calc-b" value="23" class="small-input"> 人</div>
+                                <div>重叠 (都参加): <input type="number" id="calc-ab" value="5" class="small-input"> 人</div>
+                                <div>都不参加: <input type="number" id="calc-neither" value="0" class="small-input"> 人</div>
+                            </div>
+                            <button onclick="syncVennFromInputs()" class="action-btn">更新文氏图</button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 双圈问题闯关挑战</h3>
+                            <p>点击加载对应例题，并输入正确答案！</p>
+                        </div>
+
+                        <div class="presets-container">
+                            <button onclick="loadVennPreset(1)" class="preset-btn active" id="btn-preset-1">例题1: 课外活动</button>
+                            <button onclick="loadVennPreset(2)" class="preset-btn" id="btn-preset-2">例题2: 田径运动</button>
+                            <button onclick="loadVennPreset(3)" class="preset-btn" id="btn-preset-3">例题3: 数学测试</button>
+                            <button onclick="loadVennPreset(4)" class="preset-btn" id="btn-preset-4">例题4: 象棋与围棋</button>
+                            <button onclick="loadVennPreset(5)" class="preset-btn" id="btn-preset-5">例题5: 春游带水壶</button>
+                        </div>
+
+                        <!-- 动态例题卡片 -->
+                        <div class="quiz-card" id="venn-quiz-card">
+                            <div class="quiz-question">
+                                <span class="q-num" id="venn-q-num">例1</span>
+                                <p id="venn-question-text">2（1）班学生都参加课外活动，有15人参加美术班，有23人参加舞蹈班。其中5人两个班都参加，2（1）班一共有多少人？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="venn-answer-input" placeholder="输入您的计算结果">
+                                <span id="venn-unit">人</span>
+                                <button onclick="checkVennQuestion()" class="check-btn">检查答案</button>
+                                <button onclick="skipVennQuestion()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="venn-feedback"></div>
+                            
+                            <!-- 逐步讲解步骤卡片 -->
+                            <div class="step-by-step-box" id="vennStepBox" style="display:none;">
+                                <h4>💡 两种好用的解题方法：</h4>
+                                <div class="method-card">
+                                    <h5>方法一：分块法（把文氏图切成三块）</h5>
+                                    <p id="venn-m1-text">只参加美术班的人数 = 15 - 5 = 10 人；只参加舞蹈班的人数 = 23 - 5 = 18 人；都参加的人数 = 5 人。总人数 = 10 + 5 + 18 = 33 人。</p>
+                                </div>
+                                <div class="method-card">
+                                    <h5>方法二：公式法（总数 = A + B - 重叠）</h5>
+                                    <p id="venn-m2-text">直接加起来：15 + 23 = 38 人。但是有 5 人被重复计算了 2 次，所以需要减去一次：15 + 23 - 5 = 33 人。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 下一关卡锁定/解锁提示 -->
+                        <div class="next-level-tip">
+                            <p>完成上面所有的例题小问，或者直接点击下方按钮解锁下一关！</p>
+                            <button onclick="unlockLevel(3)" class="glass-btn primary" id="unlockL3Btn">进入 Level 3 蘑菇园 ➔</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 3: 小小兔的蘑菇园 -->
+            <section id="level-3" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🍄 互动蘑菇园：小白兔采蘑菇</h3>
+                            <p>鼠标滑过不同的地块，观察蘑菇的数量和颜色！</p>
+                        </div>
+                        
+                        <!-- 蘑菇园图形容器 -->
+                        <div class="mushroom-garden-wrapper">
+                            <!-- 蘑菇园底板 -->
+                            <div class="garden-map" id="gardenMap">
+                                <!-- 区域 A 独有 (红色蘑菇区域) -->
+                                <div class="garden-zone zone-a-only" id="zone-a-only" data-zone="a-only">
+                                    <span class="zone-tag">园地A独有 (只在A不在B)</span>
+                                </div>
+                                <!-- 区域 B 独有 (蓝色蘑菇区域) -->
+                                <div class="garden-zone zone-b-only" id="zone-b-only" data-zone="b-only">
+                                    <span class="zone-tag">园地B独有 (只在B不在A)</span>
+                                </div>
+                                <!-- 公共部分 (紫色蘑菇区域) -->
+                                <div class="garden-zone zone-both" id="zone-both" data-zone="both">
+                                    <span class="zone-tag">A和B的公共部分</span>
+                                </div>
+                                <!-- 圈外部分 (金色区域) -->
+                                <div class="garden-zone zone-neither" id="zone-neither" data-zone="neither">
+                                    <span class="zone-tag">园地A和B以外的区域</span>
+                                </div>
+                                
+                                <!-- 动态生成的蘑菇元素会填充在此处 -->
+                                <div class="mushrooms-layer" id="mushroomsLayer"></div>
+                            </div>
+                        </div>
+
+                        <!-- 当前高亮区域的信息卡 -->
+                        <div class="zone-info-card" id="zoneInfoCard">
+                            <span class="info-emoji">🐇</span>
+                            <div class="info-details">
+                                <h4 id="zoneInfoTitle">蘑菇总数统计</h4>
+                                <p id="zoneInfoDesc">总共有 120 个蘑菇生长在长方形地块中。把鼠标移到不同区域看看吧！</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 例6：小白兔的挑战</h3>
+                            <p>小白兔采蘑菇。已知长方形地块共长了120个蘑菇，园地A有18个，园地B有26个，公共部分有10个。</p>
+                        </div>
+                        
+                        <!-- 子问题 1 -->
+                        <div class="quiz-card" id="l3q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>只在园地A不在园地B中有多少个蘑菇？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l3q1-input" placeholder="答案">
+                                <span>个</span>
+                                <button onclick="checkL3Question('l3q1', 8)" class="check-btn">检查</button>
+                                <button onclick="skipQuestion('l3q1', 8)" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l3q1-feedback"></div>
+                        </div>
+
+                        <!-- 子问题 2 -->
+                        <div class="quiz-card locked" id="l3q2-card">
+                            <div class="quiz-question">
+                                <span class="q-num">2</span>
+                                <p>只在园地B不在园地A中有多少个蘑菇？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l3q2-input" placeholder="答案" disabled>
+                                <span>个</span>
+                                <button onclick="checkL3Question('l3q2', 16)" class="check-btn" disabled>检查</button>
+                                <button onclick="skipQuestion('l3q2', 16)" class="skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l3q2-feedback"></div>
+                        </div>
+
+                        <!-- 子问题 3 -->
+                        <div class="quiz-card locked" id="l3q3-card">
+                            <div class="quiz-question">
+                                <span class="q-num">3</span>
+                                <p>园地A和园地B共有多少个蘑菇？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l3q3-input" placeholder="答案" disabled>
+                                <span>个</span>
+                                <button onclick="checkL3Question('l3q3', 34)" class="check-btn" disabled>检查</button>
+                                <button onclick="skipQuestion('l3q3', 34)" class="skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l3q3-feedback"></div>
+                        </div>
+
+                        <!-- 子问题 4 -->
+                        <div class="quiz-card locked" id="l3q4-card">
+                            <div class="quiz-question">
+                                <span class="q-num">4</span>
+                                <p>园地A和园地B以外的长方形内有多少个蘑菇？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l3q4-input" placeholder="答案" disabled>
+                                <span>个</span>
+                                <button onclick="checkL3Question('l3q4', 86)" class="check-btn" disabled>检查</button>
+                                <button onclick="skipQuestion('l3q4', 86)" class="skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l3q4-feedback"></div>
+                        </div>
+
+                        <!-- 下一关卡解锁提示 -->
+                        <div class="next-level-tip">
+                            <button onclick="unlockLevel(4)" class="glass-btn primary" id="unlockL4Btn">进入 Level 4 霓虹电灯 ➔</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 4: 深夜的霓虹电灯 -->
+            <section id="level-4" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area dark-theme">
+                        <div class="card-header">
+                            <h3>💡 霓虹电灯状态控制墙</h3>
+                            <p>点击下方的倍数按钮，观察灯泡的亮灭变化！亮着的灯有光晕，灭了的灯变灰。</p>
+                        </div>
+                        
+                        <div class="lamp-control-stage">
+                            <!-- 灯泡矩阵容器 -->
+                            <div class="light-matrix" id="lightMatrix">
+                                <!-- JS 渲染灯泡列表 -->
+                            </div>
+                        </div>
+
+                        <!-- 电灯数量模式选择 -->
+                        <div class="matrix-mode-selector">
+                            <button onclick="switchLampMode(24)" class="mode-btn active" id="btn-lamp-24">24 盏灯 (例7)</button>
+                            <button onclick="switchLampMode(60)" class="mode-btn" id="btn-lamp-60">60 盏灯 (例8)</button>
+                            <button onclick="switchLampMode(100)" class="mode-btn" id="btn-lamp-100">100 盏灯挑战 (拓展)</button>
+                        </div>
+
+                        <!-- 电灯控制按钮 -->
+                        <div class="lamp-actions">
+                            <button onclick="toggleMultiples(3)" class="lamp-btn color-3">按 3 的倍数开关</button>
+                            <button onclick="toggleMultiples(4)" class="lamp-btn color-4" id="btn-multiple-secondary">按 4 的倍数开关</button>
+                            <button onclick="resetLamps()" class="lamp-btn reset">全部重置 (全亮)</button>
+                        </div>
+                        
+                        <!-- 连贯动画运行器（针对100盏灯） -->
+                        <div class="challenge-runner-box" id="challengeRunnerBox" style="display:none;">
+                            <div class="runner-row">
+                                <button onclick="run100KidsChallenge()" class="action-btn run-challenge">🏃‍♂️ 一键启动：100个小朋友按开关大挑战！</button>
+                                <span class="speed-indicator" id="speedIndicator">当前小朋友: - </span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="challengeProgress"></div>
+                            </div>
+                        </div>
+
+                        <!-- 动态统计数据 -->
+                        <div class="lamp-stats">
+                            <div class="stat-pill"><span class="bulb-icon亮">💡</span> 亮着的灯：<b id="stats-on">24</b> 盏</div>
+                            <div class="stat-pill"><span class="bulb-icon灭">🔌</span> 熄灭的灯：<b id="stats-off">0</b> 盏</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 电灯倍数问题挑战</h3>
+                            <p>借助左侧的电灯开关墙，找出这两题的答案吧！</p>
+                        </div>
+
+                        <!-- 电灯问题 1 -->
+                        <div class="quiz-card" id="l4q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>有24盏亮着的电灯，各有一个开关控制，按顺序编号1~24。现在将编号为3的倍数的开关按一下，然后再将编号为4的倍数的灯开关按一下，请问还有多少盏灯亮着？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l4q1-input" placeholder="输入亮着的灯数">
+                                <span>盏</span>
+                                <button onclick="checkL4Question('l4q1', 14)" class="check-btn">检查答案</button>
+                                <button onclick="skipQuestion('l4q1', 14)" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l4q1-feedback"></div>
+                            <div class="explain-text-hint" id="l4q1-explain" style="display:none;">
+                                💡 <b>解密分析：</b><br>
+                                - 3的倍数有 24÷3=8 盏，按了1次，由亮变灭；<br>
+                                - 4的倍数有 24÷4=6 盏，按了1次，由亮变灭；<br>
+                                - 既是3也是4的倍数（即12的倍数：12, 24）有2盏，被重复按了2次，由亮变灭又变回<b>亮</b>！<br>
+                                - 因此只有被按了奇数次（即只按了一次）的灯会灭：`(8-2) + (6-2) = 6 + 4 = 10` 盏灭。<br>
+                                - 亮着的灯 = `24 - 10 = 14` 盏。
+                            </div>
+                        </div>
+
+                        <!-- 电灯问题 2 -->
+                        <div class="quiz-card locked" id="l4q2-card">
+                            <div class="quiz-question">
+                                <span class="q-num">2</span>
+                                <p>有60盏亮着的电灯，各有一个开关控制，按顺序编号1~60。现在将编号为3的倍数的开关按一下，然后再将编号为5的倍数的开关按一下，请问还有多少盏灯亮着？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l4q2-input" placeholder="输入亮着的灯数" disabled>
+                                <span>盏</span>
+                                <button onclick="checkL4Question('l4q2', 36)" class="check-btn" disabled>检查答案</button>
+                                <button onclick="skipQuestion('l4q2', 36)" class="skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l4q2-feedback"></div>
+                            <div class="explain-text-hint" id="l4q2-explain" style="display:none;">
+                                💡 <b>解密分析：</b><br>
+                                - 3的倍数有 20 盏，5的倍数有 12 盏，它们的公倍数（15的倍数）有 4 盏。<br>
+                                - 被按了1次的灯（灭）：`(20-4) + (12-4) = 16 + 8 = 24` 盏。<br>
+                                - 被按了2次的灯（保持亮）：4 盏。<br>
+                                - 未被按过的灯（保持亮）：`60 - 20 - 12 + 4 = 32` 盏。<br>
+                                - 亮着的灯共有 = `32 + 4 = 36` 盏（或者直接用 `60 - 24 = 36` 盏）。
+                            </div>
+                        </div>
+
+                        <!-- 挑战题说明 -->
+                        <div class="quiz-card locked" id="l4q3-card">
+                            <div class="quiz-question">
+                                <span class="q-num">★</span>
+                                <p><b>100盏电灯的世纪终极挑战</b><br>
+                                房间里有100盏亮着的灯。100个小朋友依次进来，第1个把所有灯按一遍，第2个按2的倍数，第3个按3的倍数... 第100个按100的倍数。最终<b>灭掉的灯</b>的编号有什么规律？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="text" id="l4q3-input" placeholder="输入规律，如：平方数" disabled>
+                                <button onclick="checkL4Challenge()" class="check-btn" disabled>提交规律</button>
+                                <button onclick="skipL4Challenge()" class="skip-btn" id="l4q3-skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l4q3-feedback"></div>
+                        </div>
+
+                        <!-- 下一关卡解锁 -->
+                        <div class="next-level-tip">
+                            <button onclick="unlockLevel(5)" class="glass-btn primary" id="unlockL5Btn">进入 Level 5 终极挑战 ➔</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 5: 终极奥数挑战与毕业礼 -->
+            <section id="level-5" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>⚖️ 画展等式天平解析器</h3>
+                            <p>点击按钮，动态演算四、五年级画展的奥秘！</p>
+                        </div>
+                        
+                        <!-- 动态代数演示区域 -->
+                        <div class="algebra-stage">
+                            <!-- 原始等式 -->
+                            <div class="equation-container">
+                                <div class="eq-card" id="eq1">
+                                    <div class="eq-title">等式 ①：非五年级的有 18 幅</div>
+                                    <div class="eq-body">
+                                        <span class="var other">【其它年级】</span> + <span class="var grade4">【四年级】</span> = <span class="num">18</span>
+                                    </div>
+                                </div>
+                                <div class="eq-card" id="eq2">
+                                    <div class="eq-title">等式 ②：非四年级的有 20 幅</div>
+                                    <div class="eq-body">
+                                        <span class="var other">【其它年级】</span> + <span class="var grade5">【五年级】</span> = <span class="num">20</span>
+                                    </div>
+                                </div>
+                                <div class="eq-card" id="eq3">
+                                    <div class="eq-title">已知条件 ③：四五共展出 22 幅</div>
+                                    <div class="eq-body">
+                                        <span class="var grade4">【四年级】</span> + <span class="var grade5">【五年级】</span> = <span class="num">22</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 合并后的等式 (JS控制显示) -->
+                            <div class="eq-merge-area" id="eqMergeArea" style="display:none;">
+                                <div class="eq-card highlight">
+                                    <div class="eq-title">合并 ① + ② 得到：</div>
+                                    <div class="eq-body">
+                                        <span class="var other">2 × 【其它年级】</span> + (<span class="var grade4">【四年级】</span> + <span class="var grade5">【五年级】</span>) = <span class="num">38</span>
+                                    </div>
+                                </div>
+                                <div class="eq-arrow">⬇️ 代入已知条件 ③ 替换 (四年级 + 五年级)</div>
+                                <div class="eq-card highlight">
+                                    <div class="eq-body">
+                                        <span class="var other">2 × 【其它年级】</span> + <span class="num">22</span> = <span class="num">38</span>
+                                    </div>
+                                </div>
+                                <div class="eq-arrow">⬇️ 计算化简</div>
+                                <div class="eq-card success-eq">
+                                    <div class="eq-body">
+                                        <span class="var other">2 × 【其它年级】</span> = <span class="num">16</span>  ➔  <span class="var other">【其它年级】</span> = <span class="num">8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 动态合并控制按钮 -->
+                        <div class="algebra-actions">
+                            <button onclick="runAlgebraSteps()" class="action-btn" id="btn-run-algebra">💡 演示合并计算步骤</button>
+                            <button onclick="resetAlgebra()" class="glass-btn" style="display:none;" id="btn-reset-algebra">重置演示</button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 例9：五年级学生画展</h3>
+                            <p>根据左侧推导过程，计算并输入最终的答案！</p>
+                        </div>
+
+                        <div class="quiz-card" id="l5q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>某小学一共五个年级，举行各年级学生画展。其中18幅不是五年级的，20幅不是四年级的。现在知道四、五年级共展出22幅画，其它年级共展出多少幅画？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l5q1-input" placeholder="输入其它年级画数">
+                                <span>幅</span>
+                                <button onclick="checkL5Question('l5q1', 8)" class="check-btn">检查答案</button>
+                                <button onclick="skipQuestion('l5q1', 8)" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l5q1-feedback"></div>
+                        </div>
+
+                        <!-- 通关与毕业模块 -->
+                        <div class="graduation-unlock-box" id="graduationBox" style="display:none;">
+                            <div class="success-banner">
+                                <h3>🎉 恭喜你，通关了全部重叠与文氏图课程！</h3>
+                                <p>现在，你可以获得由小兔子教授颁发的毕业证书！</p>
+                            </div>
+                            <div class="name-entry-row">
+                                <input type="text" id="studentNameInput" placeholder="输入你的名字">
+                                <button onclick="generateCertificate()" class="action-btn cert-btn">生成专属毕业证书 🏆</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- 毕业证书模态弹出框 -->
+        <div class="modal-overlay" id="certModal">
+            <div class="certificate-card">
+                <button class="close-modal" onclick="closeModal()">×</button>
+                <div class="cert-border">
+                    <div class="cert-content">
+                        <div class="cert-header">
+                            <span class="cert-crown">👑</span>
+                            <h2>少儿奥数趣味课堂毕业证书</h2>
+                            <p class="cert-subtitle">Certificate of Math Excellence</p>
+                        </div>
+                        <div class="cert-body">
+                            <p class="cert-text-main">恭喜聪明睿智的</p>
+                            <h3 class="cert-student-name" id="certStudentName">奥数小达人</h3>
+                            <p class="cert-text-detail">在《重叠问题与文氏图》探险课程中表现优异，成功闯过所有奥数关卡，特发此证，以兹鼓励！</p>
+                        </div>
+                        <div class="cert-footer">
+                            <div class="signature-box">
+                                <div class="sig-line"></div>
+                                <p>小兔子数学教授 🐇</p>
+                            </div>
+                            <div class="stamp-box">
+                                <div class="round-stamp">奥数通关章</div>
+                            </div>
+                            <div class="date-box">
+                                <p class="sig-line" id="certDate">2026-07-08</p>
+                                <p>毕业日期</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button onclick="window.print()" class="action-btn">🖨️ 打印 / 保存为PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 撒花 Canvas -->
+        <canvas id="confettiCanvas"></canvas>
+    </div>
+
+    <!-- JS脚本 -->
+    <script src="script.js"></script>
+</body>
+</html>
