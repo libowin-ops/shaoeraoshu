@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇妙的少儿奥数思维乐园 — 趣味互动课堂</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #4f46e5);
+            --bg-gradient: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .portal-container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        .logo-emoji {
+            font-size: 3.5rem;
+            animation: float 3s ease-in-out infinite alternate;
+            display: inline-block;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #db2777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* 课程网格 */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .course-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.02);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px rgba(79, 70, 229, 0.1);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .course-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .course-card h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .course-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .enter-btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 24px;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+            transition: all 0.2s;
+        }
+
+        .enter-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.35);
+        }
+
+        /* 锁定的关卡 */
+        .course-card.locked {
+            background: rgba(241, 245, 249, 0.6);
+            border: 2px dashed #cbd5e1;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .course-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #cbd5e1;
+        }
+
+        .lock-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #64748b;
+            color: white;
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .course-card.locked .enter-btn {
+            background: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <header>
+            <span class="logo-emoji">🚀</span>
+            <h1>奇妙的少儿奥数思维乐园</h1>
+            <p>通过趣味互动与动画模拟，轻松掌握核心奥数思维！</p>
+        </header>
+
+        <div class="courses-grid">
+            <!-- 关卡 1: 文氏图 (已上线) -->
+            <div class="course-card">
+                <div class="course-emoji">🔮</div>
+                <h3>重叠问题与文氏图</h3>
+                <p>探索线段重叠的计算技巧，运用魔法双圈解决集合容斥问题，还有深夜电灯开关的奥秘等你探索！</p>
+                <a href="./文氏图/index.html" class="enter-btn">点击进入学习 ➔</a>
+            </div>
+
+            <!-- 关卡 2: 鸡兔同笼 (即将推出) -->
+            <div class="course-card locked">
+                <div class="lock-badge">🔒 准备中</div>
+                <div class="course-emoji" style="filter: grayscale(0.5);">🐔</div>
+                <h3>鸡兔同笼问题</h3>
+                <p>一个笼子里装了鸡和兔子，数头数脚傻傻分不清？用可爱的假设法和抬腿动画帮你轻松搞定！</p>
+                <a href="#" class="enter-btn" onclick="return false;">敬请期待</a>
+            </div>
+
+            <!-- 关卡 3: 植树问题 (即将推出) -->
+            <div class="course-card locked">
+                <div class="lock-badge">🔒 准备中</div>
+                <div class="course-emoji" style="filter: grayscale(0.5);">🌳</div>
+                <h3>植树问题与间隔</h3>
+                <p>两端都植树、只有一端植树、还是两端都不植树？拖动树苗和量尺，一秒看懂“棵数与间隔”的奥秘！</p>
+                <a href="#" class="enter-btn" onclick="return false;">敬请期待</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>少儿奥数趣味互动课堂 • Designed for Kids Math Thinking</p>
+        </footer>
+    </div>
+</body>
+</html>
