@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>走遍天下无重复：一笔画与欧拉图 — 少儿奥数趣味互动课堂</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部导航 -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="emoji">✍️</span>
+                <div class="logo-text">
+                    <h1>一笔画与欧拉图</h1>
+                    <p>少儿奥数趣味互动课堂 • Single-Stroke Drawing & Eulerian Paths</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button id="soundToggleBtn" class="glass-btn" title="开关音效">
+                    <span class="icon">🔊</span> <span class="label">音效: 开</span>
+                </button>
+                <a href="../index.html" class="glass-btn back-btn">
+                    <span class="icon">🏠</span> <span>返回乐园</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- 关卡进度条 -->
+        <nav class="level-nav">
+            <div class="level-indicator active" data-level="1">
+                <div class="dot">1</div>
+                <span>奇偶顶点</span>
+            </div>
+            <div class="level-indicator locked" data-level="2">
+                <div class="dot">2</div>
+                <span>欧拉定理</span>
+            </div>
+            <div class="level-indicator locked" data-level="3">
+                <div class="dot">3</div>
+                <span>商场逃脱</span>
+            </div>
+            <div class="level-indicator locked" data-level="4">
+                <div class="dot">4</div>
+                <span>双笔风筝</span>
+            </div>
+            <div class="level-indicator locked" data-level="5">
+                <div class="dot">5</div>
+                <span>拉链变形</span>
+            </div>
+            <div class="level-indicator locked" data-level="6">
+                <div class="dot">6</div>
+                <span>邮递路线</span>
+            </div>
+            <div class="level-indicator locked" data-level="7">
+                <div class="dot">7</div>
+                <span>餐厅穿门</span>
+            </div>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            
+            <!-- LEVEL 1: 认识奇点与偶点 -->
+            <section id="level-1" class="level-panel active">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🔍 奇点与偶点探测器</h3>
+                            <p>移动鼠标或触摸顶点查看它的“连接度数”。点击找出所有的“奇点”吧！</p>
+                        </div>
+                        <div class="graph-tabs">
+                            <button id="l1-tab-a" class="tab-btn active">图A：格子房</button>
+                            <button id="l1-tab-b" class="tab-btn">图B：小洋房</button>
+                        </div>
+                        <div class="interactive-stage">
+                            <!-- 画布区 -->
+                            <div class="canvas-container">
+                                <canvas id="l1-canvas" width="500" height="350"></canvas>
+                                <div class="pulse-tip" id="l1-pulse-tip">💡 提示：连接奇数条线的点是奇点，偶数条线的是偶点。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 奇点搜寻挑战</h3>
+                            <p>请点击左图中的所有<b>奇点</b>。找齐后回答问题！</p>
+                        </div>
+                        
+                        <!-- 阶段一: 找奇点 -->
+                        <div class="quiz-card" id="l1-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p id="l1-q1-text">请在左图【格子房】中找出所有的奇点，点击将它们点亮。</p>
+                            </div>
+                            <div class="status-counter">
+                                <span>已找到奇点：</span>
+                                <span id="l1-odd-found" class="badge warning">0</span> / <span id="l1-odd-total" class="badge">4</span>
+                            </div>
+                            <div class="quiz-answer">
+                                <button onclick="checkL1ClickPhase()" id="l1-check-btn" class="check-btn" disabled>我已找齐，进入下一步</button>
+                            </div>
+                            <div class="quiz-feedback" id="l1-feedback-1"></div>
+                        </div>
+
+                        <!-- 阶段二: 选择判断 -->
+                        <div class="quiz-card locked" id="l1-q2-card">
+                            <div class="quiz-question">
+                                <span class="q-num">2</span>
+                                <p>我们发现两个图形中奇点的个数分别是：图A有4个，图B有4个。请问：一个图形中奇点的个数有什么规律？</p>
+                            </div>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="l1-q2" value="A" disabled>
+                                    <span class="custom-radio"></span>
+                                    <span>奇点的个数只能是偶数个 (2, 4, 6...)</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="l1-q2" value="B" disabled>
+                                    <span class="custom-radio"></span>
+                                    <span>奇点的个数可以是任意个 (包括奇数个)</span>
+                                </label>
+                            </div>
+                            <div class="quiz-answer">
+                                <button id="l1-q2-btn" onclick="checkL1Radio()" class="check-btn" disabled>提交答案</button>
+                                <button onclick="skipL1()" class="skip-btn" id="l1-skip-btn" disabled>跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l1-feedback-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 2: 欧拉的一笔画秘籍 -->
+            <section id="level-2" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🪄 一笔画神奇画布</h3>
+                            <p>选择一个图形，尝试在画布上“一笔画”画出来！</p>
+                        </div>
+                        <div class="graph-selector">
+                            <button class="selector-btn active" data-graph="butterfly">🦋 蝴蝶</button>
+                            <button class="selector-btn" data-graph="fan">🪁 扇子</button>
+                            <button class="selector-btn" data-graph="cpipe">🧲 C形管</button>
+                            <button class="selector-btn" data-graph="cup">🥛 马克杯</button>
+                        </div>
+                        <div class="interactive-stage">
+                            <div class="canvas-container">
+                                <canvas id="l2-canvas" width="500" height="320"></canvas>
+                                <div class="canvas-overlay-buttons">
+                                    <button id="l2-reset" class="glass-btn mini"><span class="icon">🔄</span> 重画</button>
+                                    <button id="l2-explain" class="glass-btn mini warning"><span class="icon">🩺</span> 欧拉医生诊断</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 诊断解释面板 -->
+                        <div class="explain-box" id="l2-explain-box" style="display:none;">
+                            <!-- 动态解释 -->
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 一笔画规律挑战</h3>
+                            <p>试画不同的图形，找出能被一笔画成的奥秘！</p>
+                        </div>
+                        
+                        <div class="quiz-card" id="l2-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>仔细观察并画一画这四个图形。下面哪个（些）图形可以被“一笔画”画出来？（多选）</p>
+                            </div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="l2-q1" value="butterfly">
+                                    <span class="custom-checkbox"></span>
+                                    <span>蝴蝶 (奇点数: 4)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="l2-q1" value="fan">
+                                    <span class="custom-checkbox"></span>
+                                    <span>扇子 (奇点数: 4)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="l2-q1" value="cpipe">
+                                    <span class="custom-checkbox"></span>
+                                    <span>C形管 (奇点数: 2)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="l2-q1" value="cup">
+                                    <span class="custom-checkbox"></span>
+                                    <span>马克杯 (奇点数: 4)</span>
+                                </label>
+                            </div>
+                            <div class="quiz-answer">
+                                <button onclick="checkL2()" class="check-btn">检查答案</button>
+                                <button onclick="skipL2()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l2-feedback"></div>
+                            
+                            <div class="rule-summary-box" id="l2-rule-summary" style="display:none;">
+                                <h4>💡 欧拉一笔画定理：</h4>
+                                <p>1. <b>没有奇点（0个奇点）</b>的连通图形：一定可以一笔画，且<b>起点就是终点</b>！</p>
+                                <p>2. <b>只有2个奇点</b>的连通图形：一定可以一笔画，但必须<b>从一个奇点出发，画到另一个奇点结束</b>！</p>
+                                <p>3. <b>超过2个奇点</b>的图形：<b>绝对无法</b>一笔画完！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 3: 商场通道大搜救 -->
+            <section id="level-3" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🛒 商场迷宫一笔画</h3>
+                            <p>顾客想不重复地走遍商场的每条通道。拖动顾客头像开始走吧！</p>
+                        </div>
+                        <div class="interactive-stage">
+                            <div class="canvas-container">
+                                <canvas id="l3-canvas" width="500" height="350"></canvas>
+                                <div class="canvas-overlay-buttons">
+                                    <button id="l3-reset" class="glass-btn mini"><span class="icon">🔄</span> 重新走</button>
+                                </div>
+                                <div class="visitor-bubble" id="l3-bubble" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 逃脱规划思考</h3>
+                            <p>应用欧拉定理，规划出正确的进出大门吧！</p>
+                        </div>
+                        
+                        <div class="quiz-card" id="l3-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>这个商场平面图中，哪些点是<b>奇点</b>？要想一次不重复走完所有通道，应该从哪几个门进出？</p>
+                            </div>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="l3-q1" value="A">
+                                    <span class="custom-radio"></span>
+                                    <span>A和E是奇点，A进E出</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="l3-q1" value="B">
+                                    <span class="custom-radio"></span>
+                                    <span>C和D是奇点，C进D出 (或D进C出)</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="l3-q1" value="C">
+                                    <span class="custom-radio"></span>
+                                    <span>全部是偶点，任何门进出都可以</span>
+                                </label>
+                            </div>
+                            <div class="quiz-answer">
+                                <button onclick="checkL3()" class="check-btn">检查并解锁画线</button>
+                                <button onclick="skipL3()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l3-feedback"></div>
+                            <div class="hint-action" id="l3-hint-action" style="display:none;">
+                                <p class="success-text">🎉 答对啦！因为C和D是仅有的两个奇点，所以必须从C出发，在D结束（或反过来）。请在左图拖动小人走一遍吧！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 4: 双色两笔画风筝 -->
+            <section id="level-4" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🪁 风筝多笔画挑战</h3>
+                            <p>试着用最少的笔数把风筝画完！第一笔是蓝色，第二笔是紫色哦！</p>
+                        </div>
+                        <div class="interactive-stage">
+                            <div class="canvas-container">
+                                <canvas id="l4-canvas" width="500" height="350"></canvas>
+                                <div class="canvas-overlay-buttons">
+                                    <button id="l4-reset" class="glass-btn mini"><span class="icon">🔄</span> 重来</button>
+                                    <button id="l4-next-stroke" class="glass-btn mini primary" disabled><span class="icon">✏️</span> 开始下一笔</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 笔数计算与绘制</h3>
+                            <p>多奇点图形要用几笔画完呢？这里有神奇的公式！</p>
+                        </div>
+                        
+                        <div class="quiz-card" id="l4-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>仔细观察左边的风筝。数数它有几个奇点？这个风筝至少需要几笔才能全部画出来？</p>
+                            </div>
+                            <div class="input-row">
+                                <span>奇点数：</span>
+                                <input type="number" id="l4-input-odds" placeholder="输入数量">
+                                <span>个， 至少需要：</span>
+                                <input type="number" id="l4-input-strokes" placeholder="输入笔数">
+                                <span>笔</span>
+                            </div>
+                            <div class="quiz-answer">
+                                <button onclick="checkL4Answers()" class="check-btn">检查答案</button>
+                                <button onclick="skipL4()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l4-feedback"></div>
+                            
+                            <div class="rule-summary-box" id="l4-rule-summary" style="display:none;">
+                                <h4>💡 奇数点与多笔画定理：</h4>
+                                <p>如果一个连通图形有 $2k$ 个奇点，那么画完它最少需要 **$k$ 笔**！</p>
+                                <p class="formula-box-inline">最小笔数 = 奇点数 ÷ 2</p>
+                                <p>所以这个风筝有 **4** 个奇点，最少需要 **4 ÷ 2 = 2 笔** 就能画完！请在左侧挑战“用2笔走完所有线条”吧！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 5: 盒子的“拉链”变形记 -->
+            <section id="level-5" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>📦 立体魔盒：拉链与剪刀</h3>
+                            <p>点击切换模式，添加或剪断线段。看顶点如何由红变绿，把它改造成能一笔画的图形！</p>
+                        </div>
+                        <div class="tool-selector">
+                            <button id="l5-tool-add" class="tab-btn active">➕ 增加线段 (拉链模式)</button>
+                            <button id="l5-tool-del" class="tab-btn">✂️ 剪断线段 (剪刀模式)</button>
+                            <button id="l5-reset" class="glass-btn mini" style="margin-left: auto;">🔄 重置盒子</button>
+                        </div>
+                        <div class="interactive-stage">
+                            <div class="canvas-container">
+                                <canvas id="l5-canvas" width="500" height="350"></canvas>
+                                <div class="status-counter-floating">
+                                    <span>当前奇点数：</span>
+                                    <span id="l5-odds-count" class="badge error">8</span>
+                                    <span>，是否能一笔画：</span>
+                                    <span id="l5-draw-status" class="badge">不能 ❌</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 改良图形大挑战</h3>
+                            <p>找出最少添加或去掉线段的方案！</p>
+                        </div>
+                        
+                        <div class="quiz-card" id="l5-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>小明画的这个盒子有 8 个奇点。要想一笔画完它：<br>
+                                ① 若要<b>去掉</b>线段，最少去掉几条？<br>
+                                ② 若要<b>增加</b>线段，最少增加几条？</p>
+                            </div>
+                            <div class="input-row">
+                                <span>最少去掉：</span>
+                                <input type="number" id="l5-input-del" placeholder="数量">
+                                <span>条； 最少增加：</span>
+                                <input type="number" id="l5-input-add" placeholder="数量">
+                                <span>条</span>
+                            </div>
+                            <div class="quiz-answer">
+                                <button onclick="checkL5Answers()" class="check-btn">检查答案</button>
+                                <button onclick="skipL5()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l5-feedback"></div>
+                            
+                            <div class="rule-summary-box" id="l5-rule-summary" style="display:none;">
+                                <h4>💡 奇偶转换原理：</h4>
+                                <p>增加或减少一条线段，会<b>同时改变它连接的两个端点的度数奇偶性</b>。</p>
+                                <p>图中有8个奇点，一笔画最多只允许有2个奇点。因此我们需要消除 **8 - 2 = 6** 个奇点。</p>
+                                <p>因为每一条线段的改变可以消去 2 个奇点，所以最少需要改变 **6 ÷ 2 = 3** 条线段！请在左侧点击连线/删线试一试！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 6: 城市清道夫与里程表 -->
+            <section id="level-6" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🚚 最佳邮递/清扫路线模拟</h3>
+                            <p>清扫车/邮递员必须从“邮局”出发，走遍所有街道并<b>回到邮局</b>。点击街道使车重复走一遍，把所有奇点消灭吧！</p>
+                        </div>
+                        <div class="interactive-stage">
+                            <div class="canvas-container">
+                                <canvas id="l6-canvas" width="500" height="350"></canvas>
+                                <div class="canvas-overlay-buttons">
+                                    <button id="l6-reset" class="glass-btn mini"><span class="icon">🔄</span> 重置路线</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 里程表和奇点监控 -->
+                        <div class="dashboard-box">
+                            <div class="dashboard-item">
+                                <span class="dash-label">剩余奇点数</span>
+                                <span class="dash-value" id="l6-odds-val">8</span>
+                                <span class="dash-unit">个 (目标: 0)</span>
+                            </div>
+                            <div class="dashboard-item">
+                                <span class="dash-label">重复路程</span>
+                                <span class="dash-value text-warn" id="l6-dup-val">0</span>
+                                <span class="dash-unit">km</span>
+                            </div>
+                            <div class="dashboard-item">
+                                <span class="dash-label">总行驶里程</span>
+                                <div class="odometer-container">
+                                    <span class="dash-value text-success" id="l6-total-val">26</span>
+                                </div>
+                                <span class="dash-unit">km (最优: 30)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 邮政路线最优化</h3>
+                            <p>算出最佳全程，帮邮递员叔叔省省力吧！</p>
+                        </div>
+                        
+                        <div class="quiz-card" id="l6-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>由于需要走遍每条街并回到邮局，所以图中不能有奇点（所有点在重复走后必须变成偶点）。要想重复走的路程最短，全程一共是多少千米？</p>
+                            </div>
+                            <div class="quiz-answer">
+                                <input type="number" id="l6-input-ans" placeholder="输入数字">
+                                <span>千米</span>
+                                <button onclick="checkL6Answers()" class="check-btn">检查答案</button>
+                                <button onclick="skipL6()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l6-feedback"></div>
+                            
+                            <div class="rule-summary-box" id="l6-rule-summary" style="display:none;">
+                                <h4>💡 最佳邮路秘籍：</h4>
+                                <p>为了使所有8个奇点变成偶点，我们需要在奇点之间重复连线（重复清扫）。要想重复距离最短，应该配对距离最近 of 奇点：</p>
+                                <p>1. 上方横向重复 1km，下方横向重复 1km。</p>
+                                <p>2. 右侧环形盒子的左右两个竖段各重复 1km。</p>
+                                <p>重复的总长度为 **4km**。所以最短全程为原始总长 **26km + 4km = 30km**！请在左侧点击重复路线，让奇点数归零吧！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEVEL 7: 小吃货穿门挑战 -->
+            <section id="level-7" class="level-panel">
+                <div class="panel-layout">
+                    <div class="visual-area">
+                        <div class="card-header">
+                            <h3>🐰 餐厅小吃货穿门大冒险</h3>
+                            <p>餐厅有5个小厅和9扇门。你可以选择关闭某一扇门，然后带兔子吃光其余所有门上的饼干！</p>
+                        </div>
+                        <div class="interactive-stage">
+                            <div class="canvas-container">
+                                <canvas id="l7-canvas" width="500" height="350"></canvas>
+                                <div class="canvas-overlay-buttons">
+                                    <button id="l7-reset" class="glass-btn mini"><span class="icon">🔄</span> 重置关卡</button>
+                                </div>
+                                <div class="visitor-bubble" id="l7-bubble" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-area">
+                        <div class="card-header">
+                            <h3>📝 迷宫改造师</h3>
+                            <p>分析房间门数，做出你的选择！</p>
+                        </div>
+                        
+                        <div class="quiz-card" id="l7-q1-card">
+                            <div class="quiz-question">
+                                <span class="q-num">1</span>
+                                <p>从入口1（D房）进入餐厅，能否一次不重复穿过所有9扇门？如果不能，关闭哪一扇门就可以办到？</p>
+                            </div>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="l7-q1" value="no-close">
+                                    <span class="custom-radio"></span>
+                                    <span>可以直接走完，不需要关门</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="l7-q1" value="close-3">
+                                    <span class="custom-radio"></span>
+                                    <span>不能走完，必须关闭3号门 (或4号门)</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="l7-q1" value="close-7">
+                                    <span class="custom-radio"></span>
+                                    <span>不能走完，必须关闭7号门 (或6号门)</span>
+                                </label>
+                            </div>
+                            <div class="quiz-answer">
+                                <button onclick="checkL7Answers()" class="check-btn">确定选择并改造餐厅</button>
+                                <button onclick="skipL7()" class="skip-btn">跳过</button>
+                            </div>
+                            <div class="quiz-feedback" id="l7-feedback"></div>
+                            
+                            <div class="rule-summary-box" id="l7-rule-summary" style="display:none;">
+                                <h4>💡 穿门挑战原理解密：</h4>
+                                <p>将五个大厅和室外看作点，门看作线。我们统计各房间的门数（度数）：</p>
+                                <p>- 室外: 1扇门 (奇)；A厅: 3扇门 (奇)；B厅: 3扇门 (奇)；E厅: 3扇门 (奇)。共有 4 个奇点，因此无法直接一笔画。</p>
+                                <p>如果要能从入口1（室外）出发走完：室外（奇点，度数1）必须保留为起点。因此我们需要把剩下的 A, B, E 三个奇点中的两个变成偶点。</p>
+                                <p>关闭 A 和 B 之间的 **3号门**（或 B 和 E 之间的 **4号门**），可以把它们的门数都减少1，变成偶点！这样就只剩下室外 and 另一个厅是奇点，大功告成！快点击左图对应的门关闭，然后拖动兔子完成路线吧！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 通关贺卡 (全课通关时显示) -->
+            <div class="victory-overlay" id="victoryOverlay" style="display:none;">
+                <div class="victory-card">
+                    <span class="trophy">🏆</span>
+                    <h2>恭喜通关《一笔画与欧拉图》！</h2>
+                    <p>你已经完全掌握了“奇点”与“偶点”的奥秘，解开了哥尼斯堡七桥的历史难题，还帮邮递员规划了最佳路线！你真是太棒了！</p>
+                    <button onclick="restartCourse()" class="glass-btn primary">再玩一次</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 粒子爆炸画布 -->
+    <canvas id="particle-canvas" style="position:fixed; top:0; left:0; pointer-events:none; z-index:9999; width:100%; height:100%;"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
